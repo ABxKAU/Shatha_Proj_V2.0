@@ -23,7 +23,8 @@ input[type=text],input[type=number]{width:100%;margin-top:8px;padding:12px;borde
 .q{padding:14px 0;border-bottom:1px solid #eee}
 .opt{display:block;font-weight:400;margin:8px 0;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;cursor:pointer}
 .opt:hover{background:#f0fdf4}
-.prog{color:var(--mu);margin-bottom:8px}
+.sec{color:var(--gd);margin:0 0 8px}
+.qimg{width:100%;max-width:560px;border-radius:12px;display:block;margin:12px auto}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
 .cat{background:#fff;border-radius:var(--r);overflow:hidden;text-align:center;cursor:pointer;box-shadow:0 4px 14px #0001;border:2px solid transparent;transition:.15s}
 .cat:hover{transform:translateY(-3px);border-color:var(--g)}
@@ -62,12 +63,20 @@ const API = 'https://script.google.com/macros/s/AKfycbzuFfXTZ-ET-AzyjvJOxf7Mq8fy
 const BUDGET = 150;
 const MAX_ITEMS = 4;
 
+const SECTION_NAMES = ['القسم الأول','القسم الثاني','القسم الثالث'];
+// page and q are 0-based: page 1 = القسم الثاني, q 0 = first question
+const QIMAGES = [
+ {groups:[2],   page:1, q:0, src:'images/survey/q1_g2.webp'},
+ {groups:[3],   page:1, q:0, src:'images/survey/q1_g3.webp'},
+ {groups:[2,3], page:1, q:3, src:'images/survey/q4_g23.webp'}
+];
+
 const T = {
  brand:'السوبر ماركت', yes:'نعم', no:'لا', next:'التالي', loading:'يرجى الانتظار...',
  welcomeTitle:'أهلًا بك، وشكرًا لاهتمامك بالمشاركة',
  welcomeText:'يسعدنا انضمامك إلى دراسة تهدف إلى فهم تأثير الملصقات البيئية على اختيار المنتجات الغذائية، من خلال تجربة تسوّق في متجر إلكتروني افتراضي.<br><br>تستغرق مشاركتك في التجربة نحو 15 إلى 20 دقيقة.<br><br>مشاركتك اختيارية، ويمكنك التوقف في أي وقت دون أي تبعات. لن نطلب معلومات تكشف عن هويتك وستُحفظ إجاباتك بسرية وتُستخدم لأغراض البحث العلمي فقط.<br><br>نقدّر وقتك ومساهمتك في هذا البحث.<br><br><b>هل توافق على المشاركة؟</b>',
  declinedTitle:'شكراً لك', declinedText:'تم إنهاء المشاركة. يمكنك إغلاق هذه الصفحة.',
- preTitle:'الاستبيان الأول', postTitle:'الاستبيان الأخير', page:'الصفحة',
+ preTitle:'الاستبيان الأول', postTitle:'الاستبيان الأخير',
  introTitle:'مهمة التسوّق',
  introText:'كوّن وجبة رئيسية واحدة متكاملة باختيار أربعة منتجات من أربع فئات مختلفة.<br><br>لديك ميزانية افتراضية قدرها 150 ريالًا سعوديًا.<br><br>عند الانتهاء، انتقل إلى سلة التسوّق لمراجعة اختياراتك، ثم اضغط على إنهاء مهمة التسوّق.<br><br><b>هل توافق على البدء؟</b>',
  budget:'المتبقي', sar:'ر.س', cartTitle:'سلة التسوّق', cartEmpty:'السلة فارغة', remove:'إلغاء',
@@ -91,6 +100,11 @@ const esc = s => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(
 
 function pages(){ return S.sv.kind === 'pre' ? SURVEYS.pre : (S.group === 1 ? SURVEYS.g1 : SURVEYS.g23); }
 function ans(){ const k = S.sv.kind, p = S.sv.page; return (S.A[k][p] = S.A[k][p] || []); }
+function qImage(p, i){
+  if(S.sv.kind !== 'post') return '';
+  const m = QIMAGES.find(x => x.groups.includes(S.group) && x.page === p && x.q === i);
+  return m ? m.src : '';
+}
 
 function go(s){ S.screen = s; S.err = ''; render(); window.scrollTo(0, 0); }
 function toast(m){ const d = document.createElement('div'); d.className = 'toast'; d.textContent = m; document.body.appendChild(d); setTimeout(() => d.remove(), 2000); }
@@ -116,16 +130,19 @@ const SCREENS = {
    const ps = pages(), p = S.sv.page, page = ps[p], a = ans();
    const lastPage = p === ps.length - 1;
    const qs = page.map((q, i) => {
+     const im = qImage(p, i);
+     const imgTag = im ? `<img class="qimg" src="${im}">` : '';
      if(q.open){
        const num = /العمر|الطول|الوزن/.test(q.q);
-       return `<div class="q"><b>${q.q}</b><input type="${num ? 'number' : 'text'}" ${num ? 'inputmode="decimal" min="0"' : ''} value="${esc(a[i] || '')}" oninput="setT(${i},this.value)"></div>`;
+       return `<div class="q"><b>${q.q}</b>${imgTag}<input type="${num ? 'number' : 'text'}" ${num ? 'inputmode="decimal" min="0"' : ''} value="${esc(a[i] || '')}" oninput="setT(${i},this.value)"></div>`;
      }
-     return `<div class="q"><b>${q.q}</b>${q.opts.map((o, j) => `<label class="opt"><input type="radio" name="q${i}" ${a[i] === o ? 'checked' : ''} onchange="setO(${i},${j})"> ${o}</label>`).join('')}</div>`;
+     return `<div class="q"><b>${q.q}</b>${imgTag}${q.opts.map((o, j) => `<label class="opt"><input type="radio" name="q${i}" ${a[i] === o ? 'checked' : ''} onchange="setO(${i},${j})"> ${o}</label>`).join('')}</div>`;
    }).join('');
    const title = S.sv.kind === 'pre' ? T.preTitle : T.postTitle;
    const label = (lastPage && S.sv.kind === 'post') ? T.submit : T.next;
+   const secName = (S.sv.kind === 'post' && S.group !== 1 && ps.length > 1) ? (SECTION_NAMES[p] || '') : '';
    return `<main><div class="card"><h2>${title}</h2>
-     ${ps.length > 1 ? `<div class="prog">${T.page} ${p + 1} / ${ps.length}</div>` : ''}
+     ${secName ? `<h3 class="sec">${secName}</h3>` : ''}
      ${qs}<p class="err">${S.err}</p>
      <div class="center"><button id="nextBtn" class="btn" onclick="onNext()" disabled>${label}</button></div></div></main>`;
  },
