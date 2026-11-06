@@ -7,24 +7,23 @@
 *{box-sizing:border-box}
 body{margin:0;font-family:Tahoma,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--tx)}
 .bar{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 16px;background:#fff;box-shadow:0 2px 10px #0001;flex-wrap:wrap}
-.brand{background:var(--g);color:#fff;border:0;border-radius:12px;padding:10px 18px;font-size:18px;font-weight:700;cursor:pointer}
+.brand{background:var(--g);color:#fff;border:0;border-radius:12px;padding:10px 18px;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
 .stats{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .chip{background:#ecfdf5;border-radius:20px;padding:8px 14px;font-size:15px}
 .cartbtn{background:#fff;border:2px solid var(--g);border-radius:12px;padding:8px 14px;font-size:18px;cursor:pointer}
 .badge{background:var(--g);color:#fff;border-radius:10px;padding:1px 8px;font-size:13px;margin-inline-start:4px}
 main{max-width:1000px;margin:0 auto;padding:20px 16px 70px}
-.card{background:#fff;border-radius:var(--r);padding:24px;box-shadow:0 4px 18px #0001;margin-bottom:16px}
+.card{background:#fff;border-radius:var(--r);padding:24px;box-shadow:0 4px 18px #0001;margin-bottom:16px;line-height:1.9}
 h1,h2{margin-top:0}
 .btn{background:var(--g);color:#fff;border:0;border-radius:12px;padding:12px 28px;font-size:17px;cursor:pointer;margin:6px 4px;font-family:inherit}
 .btn:hover{background:var(--gd)} .btn.sec{background:#e5e7eb;color:var(--tx)}
 .btn:disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed}
 .center{text-align:center}
-label{display:block;margin:14px 0;font-weight:600}
-input[type=text],select{width:100%;margin-top:6px;padding:12px;border:1px solid #d1d5db;border-radius:10px;font-size:16px;background:#fff;font-family:inherit}
+input[type=text],input[type=number]{width:100%;margin-top:8px;padding:12px;border:1px solid #d1d5db;border-radius:10px;font-size:16px;background:#fff;font-family:inherit}
 .q{padding:14px 0;border-bottom:1px solid #eee}
 .opt{display:block;font-weight:400;margin:8px 0;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;cursor:pointer}
 .opt:hover{background:#f0fdf4}
-.qimg{width:100%;max-width:420px;border-radius:12px;display:block;margin:8px 0}
+.prog{color:var(--mu);margin-bottom:8px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
 .cat{background:#fff;border-radius:var(--r);overflow:hidden;text-align:center;cursor:pointer;box-shadow:0 4px 14px #0001;border:2px solid transparent;transition:.15s}
 .cat:hover{transform:translateY(-3px);border-color:var(--g)}
@@ -49,7 +48,7 @@ input[type=text],select{width:100%;margin-top:6px;padding:12px;border:1px solid 
 .x{background:#fee2e2;color:#b91c1c;border:0;border-radius:10px;padding:8px 14px;cursor:pointer;font-family:inherit}
 .sum{display:flex;justify-content:space-between;font-size:18px;padding:8px 0}
 .overlay{position:fixed;inset:0;background:#0006;z-index:30;display:flex;align-items:center;justify-content:center;padding:16px}
-.modal{background:#fff;border-radius:var(--r);padding:28px;max-width:440px;text-align:center}
+.modal{background:#fff;border-radius:var(--r);padding:28px;max-width:520px;text-align:center;line-height:1.9}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 20px;border-radius:20px;z-index:60}
 .err{color:#b91c1c}
 .back{background:none;border:0;color:var(--gd);font-size:16px;cursor:pointer;margin-bottom:10px;font-family:inherit}
@@ -57,44 +56,29 @@ input[type=text],select{width:100%;margin-top:6px;padding:12px;border:1px solid 
 <body>
 <div id="app"></div>
 <script src="catalog.js"></script>
+<script src="survey.js"></script>
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbzuFfXTZ-ET-AzyjvJOxf7Mq8fykui1gpF0dqOsjzMjEqwNCw6AlSyX7q3VcOUIXqTF/exec';
 const BUDGET = 150;
-const MAX_ITEMS = 3;
+const MAX_ITEMS = 4;
 
 const T = {
  brand:'السوبر ماركت', yes:'نعم', no:'لا', next:'التالي', loading:'يرجى الانتظار...',
- welcomeTitle:'مرحباً بك', welcomeText:'هنا نص الموافقة على المشاركة (استبدله بنصك). هل توافق على المشاركة في هذه الدراسة؟',
+ welcomeTitle:'أهلًا بك، وشكرًا لاهتمامك بالمشاركة',
+ welcomeText:'يسعدنا انضمامك إلى دراسة تهدف إلى فهم تأثير الملصقات البيئية على اختيار المنتجات الغذائية، من خلال تجربة تسوّق في متجر إلكتروني افتراضي.<br><br>تستغرق مشاركتك في التجربة نحو 15 إلى 20 دقيقة.<br><br>مشاركتك اختيارية، ويمكنك التوقف في أي وقت دون أي تبعات. لن نطلب معلومات تكشف عن هويتك وستُحفظ إجاباتك بسرية وتُستخدم لأغراض البحث العلمي فقط.<br><br>نقدّر وقتك ومساهمتك في هذا البحث.<br><br><b>هل توافق على المشاركة؟</b>',
  declinedTitle:'شكراً لك', declinedText:'تم إنهاء المشاركة. يمكنك إغلاق هذه الصفحة.',
- profileTitle:'المعلومات الشخصية', introTitle:'المتجر الإلكتروني',
- introText:'ستقوم بالتسوق من المتجر. اختر ' + MAX_ITEMS + ' منتجات من أقسام مختلفة (منتج واحد من كل قسم) ضمن ميزانية ' + BUDGET + ' ريال. سيبدأ المؤقت بعد الموافقة. هل توافق على البدء؟',
- budget:'المتبقي', sar:'ر.س', cartTitle:'سلة التسوق', cartEmpty:'السلة فارغة', remove:'إلغاء',
- total:'المجموع', remaining:'المتبقي من الميزانية', finish:'انتهت مهمة التسوق',
+ preTitle:'الاستبيان الأول', postTitle:'الاستبيان الأخير', page:'الصفحة',
+ introTitle:'مهمة التسوّق',
+ introText:'كوّن وجبة رئيسية واحدة متكاملة باختيار أربعة منتجات من أربع فئات مختلفة.<br><br>لديك ميزانية افتراضية قدرها 150 ريالًا سعوديًا.<br><br>عند الانتهاء، انتقل إلى سلة التسوّق لمراجعة اختياراتك، ثم اضغط على إنهاء مهمة التسوّق.<br><br><b>هل توافق على البدء؟</b>',
+ budget:'المتبقي', sar:'ر.س', cartTitle:'سلة التسوّق', cartEmpty:'السلة فارغة', remove:'إلغاء',
+ total:'المجموع', remaining:'المتبقي من الميزانية', finish:'إنهاء مهمة التسوّق',
  finishHint:'اختر ' + MAX_ITEMS + ' منتجات من أقسام مختلفة لإنهاء المهمة.',
  add:'أضف إلى السلة', inCart:'في السلة - إلغاء', locked:'تم الاختيار من هذا القسم', over:'يتجاوز الميزانية', full:'اكتمل العدد',
- backCats:'العودة للأقسام', pickCat:'اختر القسم', surveyTitle:'الاستبيان الأخير', submit:'إرسال',
- thanksTitle:'شكراً لمشاركتك', thanksText:'تم حفظ إجاباتك بنجاح.', err:'حدث خطأ، حاول مرة أخرى',
- select:'اختر...', keepCart:'متابعة التسوق'
+ backCats:'العودة للأقسام', pickCat:'اختر القسم', submit:'إرسال',
+ thanksTitle:'شكراً لمشاركتك', thanksText:'تم حفظ إجاباتك بنجاح', err:'حدث خطأ، حاول مرة أخرى', keepCart:'متابعة التسوق'
 };
 
-const PROFILE = [
- {k:'age',type:'select',label:'العمر',opts:['18-24','25-34','35-44','45+']},
- {k:'gender',type:'select',label:'الجنس',opts:['ذكر','أنثى']},
- {k:'city',type:'text',label:'المدينة'},
- {k:'edu',type:'select',label:'المستوى التعليمي',opts:['ثانوي','بكالوريوس','دراسات عليا']},
- {k:'freq',type:'select',label:'عدد مرات التسوق أسبوعياً',opts:['1-2','3-4','5+']}
-];
-const LIK = ['موافق بشدة','موافق','محايد','غير موافق','غير موافق بشدة'];
-const SURVEY = [
- {q:'سؤال 1 (نص مؤقت): كان المتجر سهل الاستخدام',opts:LIK},
- {q:'سؤال 2 (نص مؤقت): الأسعار كانت مناسبة',opts:LIK},
- {q:'سؤال 3 (نص مؤقت): وجدت المنتجات التي أريدها',opts:LIK},
- {q:'سؤال 4 (نص مؤقت): الوقت كان كافياً',opts:LIK},
- {q:'سؤال 5 (نص مؤقت): سأتسوق من هذا المتجر مجدداً',opts:LIK},
- {q:'سؤال 6 (نص مؤقت): ماذا ترى في الصورة؟',img:'',opts:['الخيار أ','الخيار ب','الخيار ج','الخيار د']}
-];
-
-const S = {screen:'consent',profile:{},ans:[],group:0,token:'',cart:[],cat:null,
+const S = {screen:'consent',group:0,token:'',cart:[],cat:null,sv:{kind:'pre',page:0},A:{pre:{},post:{}},
            started:false,finished:false,t0:0,seconds:0,busy:false,err:''};
 const items = () => CATALOG[S.group] || [];
 const get = id => items().find(i => i.id === id);
@@ -103,10 +87,13 @@ const r2 = n => Math.round(n * 100) / 100;
 const money = n => r2(n).toFixed(2);
 const total = () => r2(S.cart.reduce((s, id) => s + get(id).price, 0));
 const fmt = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+
+function pages(){ return S.sv.kind === 'pre' ? SURVEYS.pre : (S.group === 1 ? SURVEYS.g1 : SURVEYS.g23); }
+function ans(){ const k = S.sv.kind, p = S.sv.page; return (S.A[k][p] = S.A[k][p] || []); }
 
 function go(s){ S.screen = s; S.err = ''; render(); window.scrollTo(0, 0); }
 function toast(m){ const d = document.createElement('div'); d.className = 'toast'; d.textContent = m; document.body.appendChild(d); setTimeout(() => d.remove(), 2000); }
-const esc = s => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 
 function header(){
   return `<header class="bar">
@@ -117,23 +104,30 @@ function header(){
     <button class="cartbtn" onclick="openCart()">🧺<span class="badge">${S.cart.length}/${MAX_ITEMS}</span></button>
    </div></header>`;
 }
-function goCats(){ if(S.started) go('cats'); }
+function goCats(){ if(S.started && !S.finished) go('cats'); }
 function openCart(){ if(S.started && !S.finished) go('cart'); }
 
 const SCREENS = {
  consent(){ return `<main><div class="card center"><h1>${T.welcomeTitle}</h1><p>${T.welcomeText}</p>
-   <button class="btn" onclick="go('profile')">${T.yes}</button>
+   <button class="btn" onclick="startPre()">${T.yes}</button>
    <button class="btn sec" onclick="go('declined')">${T.no}</button></div></main>`; },
  declined(){ return `<main><div class="card center"><h1>${T.declinedTitle}</h1><p>${T.declinedText}</p></div></main>`; },
- profile(){
-   const f = PROFILE.map(f => {
-     const v = S.profile[f.k] || '';
-     if(f.type === 'text') return `<label>${f.label}<input type="text" value="${esc(v)}" oninput="setP('${f.k}',this.value)"></label>`;
-     return `<label>${f.label}<select onchange="setP('${f.k}',this.value)"><option value="">${T.select}</option>
-       ${f.opts.map(o => `<option value="${o}" ${v === o ? 'selected' : ''}>${o}</option>`).join('')}</select></label>`;
+ survey(){
+   const ps = pages(), p = S.sv.page, page = ps[p], a = ans();
+   const lastPage = p === ps.length - 1;
+   const qs = page.map((q, i) => {
+     if(q.open){
+       const num = /العمر|الطول|الوزن/.test(q.q);
+       return `<div class="q"><b>${q.q}</b><input type="${num ? 'number' : 'text'}" ${num ? 'inputmode="decimal" min="0"' : ''} value="${esc(a[i] || '')}" oninput="setT(${i},this.value)"></div>`;
+     }
+     return `<div class="q"><b>${q.q}</b>${q.opts.map((o, j) => `<label class="opt"><input type="radio" name="q${i}" ${a[i] === o ? 'checked' : ''} onchange="setO(${i},${j})"> ${o}</label>`).join('')}</div>`;
    }).join('');
-   return `<main><div class="card"><h2>${T.profileTitle}</h2>${f}<p class="err">${S.err}</p>
-     <div class="center"><button id="nextBtn" class="btn" onclick="toStore()" disabled>${T.next}</button></div></div></main>`;
+   const title = S.sv.kind === 'pre' ? T.preTitle : T.postTitle;
+   const label = (lastPage && S.sv.kind === 'post') ? T.submit : T.next;
+   return `<main><div class="card"><h2>${title}</h2>
+     ${ps.length > 1 ? `<div class="prog">${T.page} ${p + 1} / ${ps.length}</div>` : ''}
+     ${qs}<p class="err">${S.err}</p>
+     <div class="center"><button id="nextBtn" class="btn" onclick="onNext()" disabled>${label}</button></div></div></main>`;
  },
  intro(){
    return header() + `<main><div class="grid dis">${SECTIONS.map(c => `<div class="cat"><img src="${c.img}"><h3>${c.title}</h3><div class="sp"></div></div>`).join('')}</div></main>
@@ -175,12 +169,6 @@ const SCREENS = {
      <div class="center"><button class="btn sec" onclick="go('cats')">${T.keepCart}</button>
      <button class="btn" ${ready ? '' : 'disabled'} onclick="finishShop()">${T.finish}</button></div></div></main>`;
  },
- survey(){
-   const qs = SURVEY.map((q, i) => `<div class="q"><b>${q.q}</b>${q.img ? `<img class="qimg" src="${q.img}">` : ''}
-     ${q.opts.map((o, j) => `<label class="opt"><input type="radio" name="q${i}" ${S.ans[i] === j ? 'checked' : ''} onchange="setA(${i},${j})"> ${o}</label>`).join('')}</div>`).join('');
-   return `<main><div class="card"><h2>${T.surveyTitle}</h2>${qs}<p class="err">${S.err}</p>
-     <div class="center"><button id="nextBtn" class="btn" onclick="submitAll()" disabled>${T.submit}</button></div></div></main>`;
- },
  done(){ return `<main><div class="card center"><h1>✅ ${T.thanksTitle}</h1><p>${T.thanksText}</p></div></main>`; }
 };
 
@@ -188,14 +176,12 @@ function render(){
   document.getElementById('app').innerHTML = SCREENS[S.screen]();
   refreshNext(); tick();
 }
-function setP(k, v){ S.profile[k] = v; refreshNext(); }
-function setA(i, j){ S.ans[i] = j; refreshNext(); }
+function setT(i, v){ ans()[i] = v; refreshNext(); }
+function setO(i, j){ ans()[i] = pages()[S.sv.page][i].opts[j]; refreshNext(); }
 function refreshNext(){
-  const b = document.getElementById('nextBtn'); if(!b) return;
-  let ok = false;
-  if(S.screen === 'profile') ok = PROFILE.every(f => (S.profile[f.k] || '').trim() !== '');
-  if(S.screen === 'survey') ok = SURVEY.every((q, i) => S.ans[i] !== undefined);
-  b.disabled = !ok || S.busy;
+  const b = document.getElementById('nextBtn'); if(!b || S.screen !== 'survey') return;
+  const page = pages()[S.sv.page], a = ans();
+  b.disabled = S.busy || !page.every((q, i) => String(a[i] === undefined ? '' : a[i]).trim() !== '');
 }
 
 async function api(body){
@@ -203,6 +189,13 @@ async function api(body){
   const j = await r.json();
   if(j.status !== 'ok') throw new Error(j.msg || 'error');
   return j;
+}
+
+function startPre(){ S.sv = {kind:'pre', page:0}; go('survey'); }
+function onNext(){
+  const ps = pages();
+  if(S.sv.page < ps.length - 1){ S.sv.page++; go('survey'); return; }
+  if(S.sv.kind === 'pre') toStore(); else submitAll();
 }
 
 async function toStore(){
@@ -223,7 +216,8 @@ function toggleItem(id){
   if(S.cart.length === MAX_ITEMS) go('cart'); else { toast('✓ ' + get(id).name); render(); }
 }
 function finishShop(){
-  S.finished = true; S.seconds = Math.floor((Date.now() - S.t0) / 1000); go('survey');
+  S.finished = true; S.seconds = Math.floor((Date.now() - S.t0) / 1000);
+  S.sv = {kind:'post', page:0}; go('survey');
 }
 function tick(){
   if(!S.started || S.finished) return;
@@ -232,13 +226,17 @@ function tick(){
 }
 setInterval(tick, 500);
 
+function collect(kind, ps){
+  const out = [];
+  ps.forEach((page, p) => page.forEach((q, i) => out.push({q:q.q, a:String(((S.A[kind][p] || [])[i]) || '').trim()})));
+  return out;
+}
+
 async function submitAll(){
   S.busy = true; const b = document.getElementById('nextBtn'); b.disabled = true; b.textContent = T.loading;
   const its = S.cart.map(id => { const it = get(id); return {cat:sec(it.sec).title, name:it.name + ' - ' + it.qty, price:it.price}; });
-  const payload = {action:'submit', token:S.token, group:S.group,
-    profile:PROFILE.map(f => (S.profile[f.k] || '').trim()),
-    items:its, total:total(), seconds:S.seconds, timedOut:false,
-    survey:SURVEY.map((q, i) => q.opts[S.ans[i]])};
+  const payload = {action:'submit', token:S.token, group:S.group, items:its, total:total(), seconds:S.seconds,
+    pre:collect('pre', SURVEYS.pre), post:collect('post', S.group === 1 ? SURVEYS.g1 : SURVEYS.g23)};
   try{ await api(payload); sessionStorage.removeItem('mk_token'); S.busy = false; go('done'); }
   catch(e){ S.busy = false; S.err = T.err; render(); }
 }
