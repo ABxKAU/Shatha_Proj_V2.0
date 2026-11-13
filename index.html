@@ -64,7 +64,6 @@ const BUDGET = 150;
 const MAX_ITEMS = 4;
 const SCREEN_OUT = {"question": "المسؤول عن شراء", "answer": "لا"};
 const T = {
-<<<<<<< HEAD
  "brand": "السوبر ماركت",
  "yes": "نعم",
  "no": "لا",
@@ -100,22 +99,6 @@ const T = {
  "thanksText": "تم حفظ إجاباتك بنجاح",
  "err": "حدث خطأ، حاول مرة أخرى",
  "keepCart": "متابعة التسوق"
-=======
- closedText:'نشكركم على اهتمامكم بالمشاركة في دراستنا. تم إغلاق تجربة التسوق بعد اكتمال العدد المطلوب من المشاركين. نقدّر لكم تعاونكم ودعمكم لهذا البحث.',
- brand:'السوبر ماركت', yes:'نعم', no:'لا', next:'التالي', loading:'يرجى الانتظار...',
- welcomeTitle:'أهلًا بك، وشكرًا لاهتمامك بالمشاركة',
- welcomeText:'يسعدنا انضمامك إلى دراسة تهدف إلى فهم تأثير الملصقات البيئية على اختيار المنتجات الغذائية، من خلال تجربة تسوّق في متجر إلكتروني افتراضي.<br><br>تستغرق مشاركتك في التجربة نحو 15 إلى 20 دقيقة.<br><br>مشاركتك اختيارية، ويمكنك التوقف في أي وقت دون أي تبعات. لن نطلب معلومات تكشف عن هويتك وستُحفظ إجاباتك بسرية وتُستخدم لأغراض البحث العلمي فقط.<br><br>نقدّر وقتك ومساهمتك في هذا البحث.<br><br><b>هل توافق على المشاركة؟</b>',
- declinedTitle:'شكراً لك', declinedText:'تم إنهاء المشاركة. يمكنك إغلاق هذه الصفحة.',
- preTitle:'الاستبيان الأول', postTitle:'الاستبيان الأخير',
- introTitle:'مهمة التسوّق',
- introText:'كوّن وجبة رئيسية واحدة متكاملة باختيار أربعة منتجات من أربع فئات مختلفة.<br><br>لديك ميزانية افتراضية قدرها 150 ريالًا سعوديًا.<br><br>عند الانتهاء، انتقل إلى سلة التسوّق لمراجعة اختياراتك، ثم اضغط على إنهاء مهمة التسوّق.<br><br><b>هل توافق على البدء؟</b>',
- budget:'المتبقي', sar:'ر.س', cartTitle:'سلة التسوّق', cartEmpty:'السلة فارغة', remove:'إلغاء',
- total:'المجموع', remaining:'المتبقي من الميزانية', finish:'إنهاء مهمة التسوّق',
- finishHint:'اختر ' + MAX_ITEMS + ' منتجات من أقسام مختلفة لإنهاء المهمة.',
- add:'أضف إلى السلة', inCart:'في السلة - إلغاء', locked:'تم الاختيار من هذا القسم', over:'يتجاوز الميزانية', full:'اكتمل العدد',
- backCats:'العودة للأقسام', pickCat:'اختر القسم', submit:'إرسال',
- thanksTitle:'شكراً لمشاركتك', thanksText:'تم حفظ إجاباتك بنجاح', err:'حدث خطأ، حاول مرة أخرى', keepCart:'متابعة التسوق'
->>>>>>> b736b38a11d9d4eb00c5b0e67dd464a9bfe35a3e
 };
 
 const S = {screen:'loading',group:0,token:'',cart:[],cat:null,sv:{kind:'pre',page:0},A:{pre:{},post:{}},
@@ -275,10 +258,7 @@ async function toStore(){
   try{
     const j = await api({action:'assign', token:sessionStorage.getItem('mk_token') || ''});
     if(j.closed){ S.busy = false; go('closed'); return; }
-<<<<<<< HEAD
     if(!CATALOG[j.group]) throw new Error('bad group');
-=======
->>>>>>> b736b38a11d9d4eb00c5b0e67dd464a9bfe35a3e
     S.token = j.token; S.group = j.group; sessionStorage.setItem('mk_token', j.token);
     S.busy = false; go('intro');
   }catch(e){ S.busy = false; S.err = T.err; render(); }
@@ -319,15 +299,6 @@ async function submitAll(){
 }
 
 render();
-<<<<<<< HEAD
 checkOpen();
-=======
-(async function init(){
-  try{
-    const j = await api({action:'status'});
-    go(j.open ? 'consent' : 'closed');
-  }catch(e){ go('consent'); }
-})();
->>>>>>> b736b38a11d9d4eb00c5b0e67dd464a9bfe35a3e
 </script>
 </body></html>
